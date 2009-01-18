@@ -1,4 +1,9 @@
 #!/usr/bin/env ruby
+# tetrinetbot
+# Announce on IRC when the TetriNET server has a single user.
+#
+# (c) Karl-Martin Skontorp <kms@skontorp.net> ~ http://picofarad.org/
+# Licensed under the GNU GPL 2.0 or later.
 
 require 'ircbot'
 require 'yaml'

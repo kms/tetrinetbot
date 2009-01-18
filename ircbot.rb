@@ -1,3 +1,8 @@
+# ircbot.rb
+#
+# (c) Martin Dahl <martin@iz.no>
+# Licensed under the MIT license.
+
 require "socket"
 
 module IRC
