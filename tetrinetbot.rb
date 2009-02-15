@@ -12,14 +12,14 @@ require 'socket'
 
 class Tetrinetbot < IRC::Bot
     def initialize(config)
-	@channel = config["channel"]
-	super
+        @channel = config["channel"]
+        super
     end
 
     def on_001(sender, target, args)
-	# connection is established when 001 is received
-	# hijack it to autojoin channels
-	do_join(@channel)
+        # connection is established when 001 is received
+        # hijack it to autojoin channels
+        do_join(@channel)
     end
 
     def on_privmsg(sender, target, args)
@@ -27,7 +27,7 @@ class Tetrinetbot < IRC::Bot
     end
 
     def on_join(sender, target, args)
-	puts "#{sender[0]} JOIN #{target}"
+        puts "#{sender[0]} JOIN #{target}"
     end
 end
 
@@ -41,38 +41,38 @@ threads << bot.run
 threads << Thread.new {
     alertsent = false
     while true
-	sock = TCPSocket.open(config["tetrinethost"], config["tetrinetport"])
-	sock.send("listuser\n", 0)
-	sleep(0.1) # Jallaballa
-	sock.send("\255\n", 0)
-	r = sock.readlines
-	sock.close
+        sock = TCPSocket.open(config["tetrinethost"], config["tetrinetport"])
+        sock.send("listuser\n", 0)
+        sleep(0.1) # Jallaballa
+        sock.send("\255\n", 0)
+        r = sock.readlines
+        sock.close
 
-	okLine = r.index("+OK\n")
+        okLine = r.index("+OK\n")
 
-	if okLine == nil
-	    print "Bad data from tetrinet server\n"
-	else
-	    users = []
-	    r[0,okLine].each { |l|
-		l.sub(/^\"(.*?)\"/) {
-		    users << $1
-		}
-	    }
+        if okLine == nil
+            print "Bad data from tetrinet server\n"
+        else
+            users = []
+            r[0,okLine].each { |l|
+                l.sub(/^\"(.*?)\"/) {
+                    users << $1
+                }
+            }
 
-	    pp users
+            pp users
 
-	    if users.size == 1
-		if alertsent == false
-		    bot.do_privmsg(config["channel"], "TetriNET single-user ALERT! [%s]" % users[0])
-		    alertsent = true
-		end
-	    else 
-		alertsent = false
-	    end
-	end
+            if users.size == 1
+                if alertsent == false
+                    bot.do_privmsg(config["channel"], "TetriNET single-user ALERT! [%s]" % users[0])
+                    alertsent = true
+                end
+            else 
+                alertsent = false
+            end
+        end
 
-	sleep(2)
+        sleep(2)
     end
 }
 
